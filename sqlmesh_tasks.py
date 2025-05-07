@@ -21,11 +21,9 @@ def extract_audit_error(stdout: str) -> typing.Union[str, None]:
 
 
 def sqlmesh_plan(entity: str, jurisdiction: str) -> typing.Union[str, None]:
+    """Run SQLMesh plan on initialized DuckDB data"""
+
     init_duckdb(jurisdiction, entity)
-    if entity == "bill":
-        model_name = "staged.bills"
-    else:
-        model_name = "staged.events"
     try:
         logger.info("Running SQLMesh plan via subprocess...")
 
@@ -37,7 +35,7 @@ def sqlmesh_plan(entity: str, jurisdiction: str) -> typing.Union[str, None]:
             "--verbose",
             "--auto-apply",
             "--select-model",
-            model_name,
+            f"staged.{entity}",
         ]
 
         result = subprocess.run(

@@ -33,10 +33,7 @@ def merge_json_files(output_file: str, entity: str, jurisdiction: str):
 
 
 def init_duckdb(jurisdiction: str, entity: str):
-    table_name = "bills"
-    if entity == "event":
-        table_name = "events"
-
+    """ Initialize Duckdb and load data"""
     logger.info(
         f"Initializing data with arguments: entity={entity}, jurisdiction={jurisdiction}"
     )
@@ -56,9 +53,9 @@ def init_duckdb(jurisdiction: str, entity: str):
 
     con.execute(
         f"""
-    CREATE OR REPLACE TABLE scraper.{table_name} AS
+    CREATE OR REPLACE TABLE scraper.{entity} AS
     SELECT * FROM read_json_auto('{merge_file_name}', format='array');
     """
     )
 
-    logger.info(f"{table_name}: initialized successfully")
+    logger.info(f"{entity}: initialized successfully")

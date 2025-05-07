@@ -1,5 +1,5 @@
 AUDIT (name assert_events_are_classified);
-SELECT * from scraper.events
+SELECT * from scraper.event
 WHERE
   scraped_at BETWEEN @start_ds AND @end_ds
   AND classification IS NULL;

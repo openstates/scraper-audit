@@ -1,5 +1,5 @@
 MODEL (
-    name staged.events,
+    name staged.event,
     kind INCREMENTAL_BY_UNIQUE_KEY (
       unique_key (jurisdiction_id, start_date, 'name')
     ),
@@ -31,6 +31,6 @@ SELECT
     scraped_at::TIMESTAMP AS scraped_at,
     _id::TEXT AS _id
 FROM
-    scraper.events
+    scraper.event
 WHERE
     scraped_at BETWEEN @start_ts AND @end_ts;

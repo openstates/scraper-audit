@@ -3,4 +3,4 @@ _data
 .cache
 merged_*
 db.db
-*/__pycache__
+__pycache__
