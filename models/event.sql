@@ -1,13 +1,11 @@
 MODEL (
     name staged.event,
-    kind INCREMENTAL_BY_UNIQUE_KEY (
-      unique_key (jurisdiction_id, start_date, 'name')
-    ),
+    kind FULL,
     start '2024-04-24',
     cron '0 5 * * *',
     interval_unit 'day',
     grains (jurisdiction_id, start_date, 'name'),
-    audits (assert_events_are_classified(blocking := false)),
+    audits (assert_events_are_classified),
 );
 
 SELECT
@@ -31,6 +29,4 @@ SELECT
     scraped_at::TIMESTAMP AS scraped_at,
     _id::TEXT AS _id
 FROM
-    scraper.event
-WHERE
-    scraped_at BETWEEN @start_ts AND @end_ts;
+    scraper.event;

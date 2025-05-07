@@ -1,8 +1,6 @@
 MODEL (
     name staged.bill,
-    kind INCREMENTAL_BY_UNIQUE_KEY (
-        unique_key (id)
-    ),
+    kind FULL,
     start '2024-04-24',
     cron '0 5 * * *',
     interval_unit 'day',
@@ -34,6 +32,4 @@ SELECT
     scraped_at::TIMESTAMP AS scraped_at,
     _id::TEXT AS _id
 FROM
-    scraper.bill
-WHERE
-    scraped_at BETWEEN @start_ts AND @end_ts;
+    scraper.bill;

@@ -4,6 +4,4 @@ AUDIT (
   blocking false
 );
 SELECT * from scraper.bill
-WHERE
-  scraped_at BETWEEN @start_ds AND @end_ds
-  AND sponsorships IS NULL;
+WHERE sponsorships IS NULL;
