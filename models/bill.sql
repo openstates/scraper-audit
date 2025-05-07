@@ -9,8 +9,6 @@ MODEL (
     grain (id),
     audits (
     assert_bills_have_sponsor,
-    -- assert_nv_bills_have_abstract,
-    -- assert_bill_actions_are_classified,
     ),
 );
 
