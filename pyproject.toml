@@ -5,7 +5,7 @@ description = "Runs non-blocking audits on scraper outputs"
 authors = ["Alex Obaseki <alex@pluralpolicy.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.9"
 sqlmesh = "^0.176.0"
 duckdb = "^1.2.2"
 
@@ -14,5 +14,5 @@ black = "^22"
 
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"

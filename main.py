@@ -1,7 +1,7 @@
 import argparse
 
-from utils import init_duckdb
-from sqlmesh_runner import run_sqlmesh_plan
+
+from sqlmesh_tasks import sqlmesh_plan
 
 if __name__ == "__main__":
     default_parser = argparse.ArgumentParser(add_help=False)
@@ -28,6 +28,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
     entity = args.entity
     jurisdiction = args.jurisdiction
-    init_duckdb(jurisdiction, entity)
-    # Run a basic plan for the current project
-    run_sqlmesh_plan(entity)
+    report = sqlmesh_plan(entity, jurisdiction)
+    if report:
+        print("Audit failed:\n", report)
+    else:
+        print("Audit passed.")
