@@ -20,7 +20,7 @@
       classification TEXT)[]
     citations: JSON[]
     sources: STRUCT(url TEXT, note TEXT)[]
-    extras: STRUCT(AL_BILL_ID TEXT, cosponsor_bioguides TEXT[], sponsor_bioguides TEXT[])
+    extras: JSON
     _id: UUID
     jurisdictions: STRUCT(id TEXT, name TEXT, classification TEXT, division_id TEXT)
     scraped_at: TIMESTAMP

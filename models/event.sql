@@ -5,7 +5,11 @@ MODEL (
     cron '0 5 * * *',
     interval_unit 'day',
     grains (jurisdiction_id, start_date, 'name'),
-    audits (assert_events_are_classified),
+    audits (assert_events_are_classified,
+    assert_events_have_start_dates,
+    assert_events_have_participants,
+    assert_events_have_sources,
+    ),
 );
 
 SELECT
