@@ -45,3 +45,20 @@
     jurisdiction: STRUCT(id TEXT, name TEXT, classification TEXT, division_id TEXT)
     scraped_at: TIMESTAMP
     _id: UUID
+- name: '"db"."scraper"."vote_event"'
+  columns:
+    identifier: TEXT
+    motion_text: TEXT
+    motion_classification: TEXT[]
+    start_date: TIMESTAMP
+    result: TEXT
+    organization: JSON
+    legislative_session: TEXT
+    bill: JSON
+    bill_action: TEXT
+    bill_identifier: TEXT
+    votes: STRUCT(option TEXT, voter_name TEXT, voter_id JSON, note TEXT)[]
+    counts: STRUCT(option TEXT, value INTEGER)[]
+    sources: STRUCT(url TEXT, note TEXT)[]
+    extras: JSON
+    _id: UUID

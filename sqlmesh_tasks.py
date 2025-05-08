@@ -25,7 +25,7 @@ def sqlmesh_plan(entity: str, jurisdiction: str) -> typing.Union[str, None]:
 
     init_duckdb(jurisdiction, entity)
     try:
-        logger.info("Running SQLMesh plan via subprocess...")
+        logger.info(f"Running SQLMesh plan for {entity} via subprocess...")
 
         command = [
             "poetry",

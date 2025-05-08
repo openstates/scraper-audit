@@ -28,8 +28,15 @@ if __name__ == "__main__":
     args = parser.parse_args()
     entity = args.entity
     jurisdiction = args.jurisdiction
-    report = sqlmesh_plan(entity, jurisdiction)
-    if report:
-        print("Audit failed:\n", report)
-    else:
-        print("Audit passed.")
+
+    entities = [entity]
+    # Bill scrape often contains vote_event
+    if entity == "bill":
+        entities.append("vote_event")
+
+    for table in entities:
+        report = sqlmesh_plan(table, jurisdiction)
+        if report:
+            print(f"{table} Audit failed:\n", report)
+        else:
+            print(f"{table} Audit passed.")

@@ -1,0 +1,27 @@
+MODEL (
+    name staged.vote_event,
+    kind FULL,
+    start '2025-01-01',
+    cron '0 5 * * *',
+    interval_unit 'day',
+    grains (identifier, start_date),
+);
+
+SELECT
+    identifier::TEXT AS identifier,
+    motion_text::TEXT AS motion_text,
+    motion_classification::TEXT[] AS motion_classification,
+    NULLIF(start_date, '')::TIMESTAMP AS start_date,
+    result::TEXT AS result,
+    organization::JSON AS organization,
+    legislative_session::TEXT AS legislative_session,
+    bill::JSON AS bill,
+    bill_action::TEXT AS bill_action,
+    bill_identifier::TEXT AS bill_identifier,
+    votes::JSON AS votes,
+    counts::JSON AS counts,
+    sources::JSON AS sources,
+    extras::JSON AS extras,
+    _id::TEXT AS _id
+FROM
+    scraper.vote_event;
