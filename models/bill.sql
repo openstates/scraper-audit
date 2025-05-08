@@ -9,6 +9,7 @@ MODEL (
     assert_bills_have_sponsors,
     assert_bills_have_abstracts,
     assert_bills_have_classifications,
+    assert_bills_have_actions,
     assert_bills_have_versions,
     assert_bills_have_title,
     assert_bills_have_identifier,

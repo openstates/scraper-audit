@@ -22,6 +22,14 @@ AUDIT (
 SELECT * FROM scraper.bill
 WHERE len(sponsorships) < 1;
 
+-- all bills have actions?
+AUDIT (
+  name assert_bills_have_actions,
+  blocking false
+);
+SELECT * FROM scraper.bill
+WHERE len(actions) < 1;
+
 -- all bills have an abstract, exempt USA
 AUDIT (
   name assert_bills_have_abstracts,
@@ -99,5 +107,5 @@ bill_version_links AS (
 SELECT *
 FROM bill_version_links
 WHERE
-    link.url IS NULL
-    OR link.media_type IS NULL;
+link.url IS NULL
+OR link.media_type IS NULL;
