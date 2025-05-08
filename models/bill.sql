@@ -6,7 +6,9 @@ MODEL (
     interval_unit 'day',
     grain (id),
     audits (
-    assert_bills_have_sponsor,
+    assert_bills_have_sponsors,
+    assert_bills_have_abstracts,
+    assert_bills_have_classifications
     ),
 );
 
