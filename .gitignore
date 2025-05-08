@@ -1,0 +1,6 @@
+logs
+_data
+.cache
+merged_*
+db.db
+__pycache__

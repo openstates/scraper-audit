@@ -1,0 +1,47 @@
+- name: '"db"."scraper"."bills"'
+  columns:
+    legislative_session: TEXT
+    identifier: TEXT
+    title: TEXT
+    from_organization: TEXT
+    classification: TEXT[]
+    subject: JSON[]
+    abstracts: STRUCT(abstract TEXT)[]
+    other_titles: STRUCT(note TEXT, title TEXT)[]
+    other_identifiers: JSON[]
+    actions: STRUCT(description TEXT, date TIMESTAMP, organization_id TEXT, classification
+      TEXT[], related_entities JSON[])[]
+    sponsorships: STRUCT("name" TEXT, classification TEXT, entity_type TEXT, "primary"
+      BOOLEAN, person_id TEXT, organization_id JSON)[]
+    related_bills: JSON[]
+    versions: STRUCT(note TEXT, links STRUCT(url TEXT, media_type TEXT)[], date TEXT,
+      classification TEXT)[]
+    documents: STRUCT(note TEXT, links STRUCT(url TEXT, media_type TEXT)[], date TEXT,
+      classification TEXT)[]
+    citations: JSON[]
+    sources: STRUCT(url TEXT, note TEXT)[]
+    extras: JSON
+    _id: UUID
+    jurisdictions: STRUCT(id TEXT, name TEXT, classification TEXT, division_id TEXT)
+    scraped_at: TIMESTAMP
+- name: '"db"."scraper"."events"'
+  columns:
+    name: TEXT
+    all_day: BOOLEAN
+    start_date: TIMESTAMP
+    end_date: TEXT
+    status: TEXT
+    classification: TEXT
+    description: TEXT
+    upstream_id: TEXT
+    location: STRUCT(name TEXT, note TEXT, coordinates JSON)
+    media: STRUCT(note TEXT, links STRUCT(url TEXT, media_type TEXT)[], date TEXT, classification TEXT)[]
+    documents: JSON[]
+    links: JSON[]
+    participants: STRUCT(name TEXT, entity_type TEXT, note TEXT,committee_id TEXT)[]
+    agenda: STRUCT(description TEXT, classification TEXT[], related_entities JSON[], subjects JSON[], media JSON[], notes JSON[], order INTEGER, extras JSON)[]
+    sources: STRUCT(url TEXT,note TEXT)[]
+    extras: JSON
+    jurisdiction: STRUCT(id TEXT, name TEXT, classification TEXT, division_id TEXT)
+    scraped_at: TIMESTAMP
+    _id: UUID
