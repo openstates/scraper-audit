@@ -1,4 +1,4 @@
-- name: '"db"."scraper"."bills"'
+- name: '"db"."scraper"."bill"'
   columns:
     legislative_session: TEXT
     identifier: TEXT
@@ -20,11 +20,11 @@
       classification TEXT)[]
     citations: JSON[]
     sources: STRUCT(url TEXT, note TEXT)[]
-    extras: JSON
+    extras: STRUCT(AL_BILL_ID TEXT, cosponsor_bioguides TEXT[], sponsor_bioguides TEXT[])
     _id: UUID
     jurisdictions: STRUCT(id TEXT, name TEXT, classification TEXT, division_id TEXT)
     scraped_at: TIMESTAMP
-- name: '"db"."scraper"."events"'
+- name: '"db"."scraper"."event"'
   columns:
     name: TEXT
     all_day: BOOLEAN

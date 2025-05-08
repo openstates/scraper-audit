@@ -8,7 +8,8 @@ MODEL (
     audits (
     assert_bills_have_sponsors,
     assert_bills_have_abstracts,
-    assert_bills_have_classifications
+    assert_bills_have_classifications,
+    assert_bills_have_versions,
     ),
 );
 
