@@ -28,7 +28,7 @@ def init_duckdb(jurisdiction: str, entity: str):
     con.execute(
         f"""
     CREATE OR REPLACE TABLE scraper.{entity} AS
-    SELECT * FROM read_json_auto('{merge_file_name}', format='auto');
+    SELECT * FROM read_json_auto('{merge_file_name}', format='auto', union_by_name=true);
     """
     )
 
