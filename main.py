@@ -19,8 +19,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--entity",
         "-e",
-        required=True,
-        choices=["bill", "event"],
+        choices=["bill", "event", "vote_event"],
         type=str,
         help="Entity type: bill or event",
     )
@@ -28,8 +27,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
     entity = args.entity
     jurisdiction = args.jurisdiction
-    report = sqlmesh_plan(entity, jurisdiction)
-    if report:
-        print("Audit failed:\n", report)
+
+    if entity:
+        entities = [entity]
     else:
-        print("Audit passed.")
+        entities = ["bill", "event", "vote_event"]
+    report = sqlmesh_plan(entities, jurisdiction)
