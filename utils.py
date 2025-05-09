@@ -14,7 +14,7 @@ def check_for_json_files(file_path: str) -> bool:
 
 
 def init_duckdb(jurisdiction: str, entities: list[str]) -> list[str]:
-    """Initialize Duckdb and load data"""
+    """Initialize Duckdb and load data, return list of tables created for usage downstream."""
 
     db_path = "db.db"
     if os.path.exists(db_path):
