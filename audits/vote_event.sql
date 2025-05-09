@@ -54,10 +54,18 @@ AUDIT (
 SELECT * from scraper.vote_event
 WHERE organization IS NULL;
 
--- all events have motion classification?
+-- all vote events have motion classification?
 AUDIT (
   name assert_vote_events_have_motion_classification,
   blocking false
 );
 SELECT * FROM scraper.vote_event
 WHERE len(motion_classification) < 1;
+
+-- all vote events count have four options?
+AUDIT (
+  name assert_vote_events_count_have_four_options,
+  blocking false
+);
+SELECT * FROM scraper.vote_event
+WHERE len(count) = 4;

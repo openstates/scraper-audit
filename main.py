@@ -19,8 +19,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--entity",
         "-e",
-        required=True,
-        choices=["bill", "event"],
+        choices=["bill", "event", "vote_event"],
         type=str,
         help="Entity type: bill or event",
     )
@@ -29,14 +28,8 @@ if __name__ == "__main__":
     entity = args.entity
     jurisdiction = args.jurisdiction
 
-    entities = [entity]
-    # Bill scrape often contains vote_event
-    if entity == "bill":
-        entities.append("vote_event")
-
-    for table in entities:
-        report = sqlmesh_plan(table, jurisdiction)
-        if report:
-            print(f"{table} Audit failed:\n", report)
-        else:
-            print(f"{table} Audit passed.")
+    if entity:
+        entities = [entity]
+    else:
+        entities = ["bill", "event", "vote_event"]
+    report = sqlmesh_plan(entities, jurisdiction)
