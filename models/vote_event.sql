@@ -6,14 +6,14 @@ MODEL (
     interval_unit 'day',
     grains (identifier, start_date),
     audits (
-    assert_vote_events_have_bill,
-    assert_vote_events_have_bill_identifier,
-    assert_vote_events_have_start_date,
-    assert_vote_events_have_result,
-    assert_vote_events_have_legislative_session,
-    assert_vote_events_have_motion_text,
-    assert_vote_events_have_organization,
-    assert_vote_events_have_motion_classification,
+        assert_vote_events_have_bill,
+        assert_vote_events_have_bill_identifier,
+        assert_vote_events_have_start_date,
+        assert_vote_events_have_result,
+        assert_vote_events_have_legislative_session,
+        assert_vote_events_have_motion_text,
+        assert_vote_events_have_organization,
+        assert_vote_events_have_motion_classification,
     ),
 );
 
