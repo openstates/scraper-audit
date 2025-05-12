@@ -1,6 +1,5 @@
 import argparse
 
-
 from sqlmesh_tasks import sqlmesh_plan
 
 if __name__ == "__main__":
