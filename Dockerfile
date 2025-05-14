@@ -16,7 +16,7 @@ RUN apt-get update -qq \
   && poetry config virtualenvs.create false
 
 # Copy poetry files
-COPY pyproject.toml /
+COPY pyproject.toml /app
 COPY poetry.lock /app
 
 

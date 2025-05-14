@@ -4,3 +4,4 @@ _data
 merged_*
 db.db
 __pycache__
+*json
