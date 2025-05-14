@@ -100,4 +100,4 @@ docker run --rm -v ./_data:/app/_data scraper-audit --entity "bill"
 
 Note: The `--entity` flag is optional.
 If provided, it can be set to `bill`, `event`, or `vote_event` to audit a specific entity.
-If omitted, audits will be run for all entities.
+If omitted, audits will run for all entities.
