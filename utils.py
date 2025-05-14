@@ -18,7 +18,7 @@ def check_for_json_files(file_path: str) -> bool:
     return len(matching_files) > 0
 
 
-def download_files_from_gcs(jur_abbreviation: str, file_path: str) -> None:
+def download_files_from_gcs(file_path: str) -> None:
     """Download from GCS to local directory"""
     try:
         cloud_storage_client = storage.Client(project=GCP_PROJECT)
@@ -47,13 +47,12 @@ def download_files_from_gcs(jur_abbreviation: str, file_path: str) -> None:
         logger.warning(
             f"An error occurred during the attempt to download files from Google Cloud Storage: {e}"
         )
-        raise
 
 
 def init_duckdb(
     jurisdiction: str,
     entities: list[str],
-    last_scrape_time: str,
+    last_scrape_end_time: str = None,
 ) -> list[str]:
     """Initialize Duckdb and load data, return list of tables created for usage downstream."""
 
@@ -62,9 +61,9 @@ def init_duckdb(
         os.remove(db_path)
 
     sub_directory = "*"
-    if jurisdiction and last_scrape_time:
+    if jurisdiction and last_scrape_end_time:
         sub_directory = jurisdiction.replace("ocd-jurisdiction/", "")
-        sub_directory = f"{sub_directory}/{last_scrape_time}"
+        sub_directory = f"{sub_directory}/{last_scrape_end_time}"
     # Create DuckDB and load
     logger.info("Creating DuckDB schema and loading data...")
     con = duckdb.connect(db_path)
@@ -79,7 +78,7 @@ def init_duckdb(
         logger.info(
             "No file found in local directory, attempting to download from GCS, requires credentials in ENV."
         )
-        download_files_from_gcs(jurisdiction, sub_directory)
+        download_files_from_gcs(sub_directory)
 
     # Load data into duckdb table
     for entity in entities:

@@ -27,6 +27,11 @@ def sqlmesh_plan(entities: list[str], jurisdiction: str) -> list:
     initialize_entities = [f"staged.{entity}" for entity in initialize_entities]
     reports = []
 
+    if not initialize_entities:
+        logger.info(
+            "No entities were initialized for auditing. Please verify that the data directory exists and contains valid JSON files."
+        )
+        return reports
     for entity in initialize_entities:
         command = [
             "poetry",
