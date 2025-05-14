@@ -1,0 +1,8 @@
+.cache/
+_data/
+logs/
+db.db
+*.pyc
+__pycache__/
+*.md
+.git/

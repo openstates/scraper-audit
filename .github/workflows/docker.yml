@@ -1,0 +1,44 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+jobs:
+  publish:
+    name: Build and Push to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          tags: "openstates/scraper-audit:latest,openstates/scraper-audit:${{ github.sha }}"
+          push: true
+  publish-plural:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          project_id: civic-eagle-enview-prod
+          credentials_json: "${{ secrets.PLURAL_OPEN_REPO_PUSHER_KEY }}"
+      - name: Setup Google Cloud SDK
+        uses: "google-github-actions/setup-gcloud@v2"
+      - name: Docker Auth
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          tags: "us-central1-docker.pkg.dev/civic-eagle-enview-prod/open-containers/scraper-audit:latest,us-central1-docker.pkg.dev/civic-eagle-enview-prod/open-containers/scraper-audit:${{ github.sha }}"
+          push: true
