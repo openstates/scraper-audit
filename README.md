@@ -95,7 +95,7 @@ docker build -t scraper-audit .
 Assuming your JSON data is in a local _data directory run
 
 ```bash
-docker run --rm -v _data:/app/_data scraper-audit --entity "bill"
+docker run --rm -v ./_data:/app/_data scraper-audit --entity "bill"
 ```
 
 Note: The `--entity` flag is optional.
