@@ -53,7 +53,7 @@ def download_files_from_gcs(jur_abbreviation: str, file_path: str) -> None:
 def init_duckdb(
     jurisdiction: str,
     entities: list[str],
-    last_scrape_time: str = "2025-05-13T20:23:09.230102+00:00",
+    last_scrape_time: str,
 ) -> list[str]:
     """Initialize Duckdb and load data, return list of tables created for usage downstream."""
 
