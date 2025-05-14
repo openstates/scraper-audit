@@ -1,12 +1,21 @@
 MODEL (
     name staged.bill,
     kind FULL,
-    start '2024-04-24',
+    start '2025-01-01',
     cron '0 5 * * *',
     interval_unit 'day',
     grain (id),
     audits (
-    assert_bills_have_sponsor,
+        assert_bills_have_sponsors,
+        assert_bills_have_abstracts,
+        assert_bills_have_classifications,
+        assert_bills_have_actions,
+        assert_bills_have_versions,
+        assert_bills_have_title,
+        assert_bills_have_identifier,
+        assert_bill_versions_have_note,
+        assert_bill_versions_have_links,
+        assert_bill_versions_have_source_document,
     ),
 );
 

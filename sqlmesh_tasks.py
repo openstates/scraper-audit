@@ -20,13 +20,14 @@ def extract_audit_error(stdout: str) -> typing.Union[str, None]:
     return None
 
 
-def sqlmesh_plan(entity: str, jurisdiction: str) -> typing.Union[str, None]:
+def sqlmesh_plan(entities: list[str], jurisdiction: str) -> list:
     """Run SQLMesh plan on initialized DuckDB data"""
 
-    init_duckdb(jurisdiction, entity)
-    try:
-        logger.info("Running SQLMesh plan via subprocess...")
+    initialize_entities = init_duckdb(jurisdiction, entities)
+    initialize_entities = [f"staged.{entity}" for entity in initialize_entities]
+    reports = []
 
+    for entity in initialize_entities:
         command = [
             "poetry",
             "run",
@@ -35,19 +36,27 @@ def sqlmesh_plan(entity: str, jurisdiction: str) -> typing.Union[str, None]:
             "--verbose",
             "--auto-apply",
             "--select-model",
-            f"staged.{entity}",
+            entity,
         ]
 
-        result = subprocess.run(
-            command, cwd=".", check=True, capture_output=True, text=True
-        )
+        try:
+            logger.info(f"Running SQLMesh plan for entity: {entity} via subprocess...")
+            result = subprocess.run(
+                command, cwd=".", check=True, capture_output=True, text=True
+            )
+            report = extract_audit_error(result.stdout)
+            logger.info(f"SQLMesh plan output:\n{result.stdout}")
+            if result.stderr:
+                logger.warning(f"SQLMesh plan warnings/errors:\n{result.stderr}")
+        except subprocess.CalledProcessError as e:
+            logger.error(f"SQLMesh plan failed. Exit code: {e.returncode}")
+            logger.error(f"stdout:\n{e.stdout}")
+            logger.error(f"stderr:\n{e.stderr}")
+            raise
 
-        logger.info(f"SQLMesh plan output:\n{result.stdout}")
-        if result.stderr:
-            logger.warning(f"SQLMesh plan warnings/errors:\n{result.stderr}")
-        return extract_audit_error(result.stdout)
-    except subprocess.CalledProcessError as e:
-        logger.error(f"SQLMesh plan failed. Exit code: {e.returncode}")
-        logger.error(f"stdout:\n{e.stdout}")
-        logger.error(f"stderr:\n{e.stderr}")
-        raise
+        if report:
+            print(f"Entity: {entity} audit failed:\n", report)
+            reports.append(report)
+        else:
+            print(f"Entity: {entity} audit passed.")
+    return reports
