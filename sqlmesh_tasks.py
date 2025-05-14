@@ -55,8 +55,8 @@ def sqlmesh_plan(entities: list[str], jurisdiction: str) -> list:
             raise
 
         if report:
-            print(f"Entity: {entity} audit failed:\n", report)
+            logger.info(f"Entity: {entity} audit failed:\n", report)
             reports.append(report)
         else:
-            print(f"Entity: {entity} audit passed.")
+            logger.info(f"Entity: {entity} audit passed.")
     return reports
