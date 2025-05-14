@@ -76,3 +76,28 @@ Updating virtual layer  ━━━━━━━━━━━━━━━━━━�
 Audit failed:
  [WARNING] staged.bill: 'assert_bills_have_sponsor' audit error: 1179 rows failed. Learn more in logs: ~/scraper-audit/logs/sqlmesh_2025_05_06_20_58_30.log
 ```
+
+### Docker Usage
+
+To run the scraper-audit using Docker, you can build the image locally and execute it.
+Ensure your data directory is accessible to Docker.
+For example, if your JSON files are in a local `_data` folder:
+
+#### Build the Docker Image
+
+From the root of the project run
+```bash
+docker build -t scraper-audit .
+```
+
+#### Run the Container
+
+Assuming your JSON data is in a local _data directory run
+
+```bash
+docker run --rm -v _data:/app/_data scraper-audit --entity "bill"
+```
+
+Note: The `--entity` flag is optional.
+If provided, it can be set to `bill`, `event`, or `vote_event` to audit a specific entity.
+If omitted, audits will be run for all entities.
