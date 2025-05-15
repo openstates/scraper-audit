@@ -1,6 +1,7 @@
 import argparse
 
 from sqlmesh_tasks import sqlmesh_plan
+from openstates_metadata import lookup
 from utils import send_slack_message
 
 
@@ -27,16 +28,24 @@ def main() -> None:
 
     args = parser.parse_args()
     entity = args.entity
-    jurisdiction = args.jurisdiction
+    jur_obj = lookup(abbr=args.jurisdiction) if args.jurisdiction else None
 
     if entity:
         entities = [entity]
     else:
         entities = ["bill", "event", "vote_event"]
-    reports = sqlmesh_plan(entities, jurisdiction)
+
+    # Use Jurisdiction if it is provided
+    if jur_obj:
+        reports = sqlmesh_plan(entities, jur_obj.jurisdiction_id)
+    else:
+        reports = sqlmesh_plan(entities)
+
+    # Send report
     if reports:
         reports = "\n".join(reports)
-        msg = f"Scrape Output Audit for {jurisdiction}: \n{reports}"
+        jur_name = jur_obj.name if jur_obj else ""
+        msg = f"Scrape Output Audit for {jur_name}: \n{reports}"
         send_slack_message("data-reports", msg)
 
 

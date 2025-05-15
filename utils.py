@@ -1,7 +1,6 @@
 import os
 import glob
 import logging
-import typing
 
 import duckdb
 from google.cloud import storage
@@ -20,6 +19,7 @@ SLACK_BEARER_TOKEN = os.environ.get("SLACK_BEARER_TOKEN", None)
 def send_slack_message(channel, msg=None, attachments=None) -> None:
     if not SLACK_BEARER_TOKEN:
         logger.warning("No SLACK_BEARER_TOKEN, cannot send slack notification.")
+        return
     sendobj = {"channel": channel}
     if msg:
         sendobj["text"] = msg
@@ -73,8 +73,8 @@ def download_files_from_gcs(file_path: str) -> None:
 
 
 def init_duckdb(
-    jurisdiction: str,
     entities: list[str],
+    jurisdiction: str = None,
 ) -> list[str]:
     """Initialize Duckdb and load data, return list of tables created for usage downstream."""
 
@@ -82,17 +82,21 @@ def init_duckdb(
     if os.path.exists(db_path):
         os.remove(db_path)
 
-    sub_directory = "*"
+    # Determine subdirectory pattern for file search
     if jurisdiction and DAG_RUN_START:
-        sub_directory = jurisdiction.replace("ocd-jurisdiction/", "")
-        sub_directory = f"{sub_directory}/{DAG_RUN_START}"
+        # Strip OCD prefix and build a dynamic path using DAG_RUN_START
+        relative_path = jurisdiction.replace("ocd-jurisdiction/", "")
+        sub_directory = f"**/{relative_path}/{DAG_RUN_START}"
+    else:
+        sub_directory = "**"
+
     # Create DuckDB and load
     logger.info("Creating DuckDB schema and loading data...")
     con = duckdb.connect(db_path)
     con.execute("CREATE SCHEMA IF NOT EXISTS scraper")
     table_created = []
 
-    file_path_prefix = f"./*/{sub_directory}"
+    file_path_prefix = f"./{sub_directory}"
     all_files_path = f"{file_path_prefix}/*.json"
 
     # Grab scrape output from data lake if none is provided
@@ -100,7 +104,9 @@ def init_duckdb(
         logger.info(
             "No file found in local directory, attempting to download from GCS, requires credentials in ENV."
         )
-        download_files_from_gcs(sub_directory)
+        # Remove "**/" from path prefix before passing to GCS downloader
+        gcs_path = sub_directory[3:] if sub_directory.startswith("**/") else sub_directory
+        download_files_from_gcs(gcs_path)
 
     # Load data into duckdb table
     for entity in entities:
