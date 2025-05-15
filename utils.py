@@ -11,6 +11,7 @@ logger = logging.getLogger("openstates")
 GCP_PROJECT = os.environ.get("GCP_PROJECT", None)
 BUCKET_NAME = os.environ.get("BUCKET_NAME", None)
 SCRAPE_LAKE_PREFIX = os.environ.get("BUCKET_PREFIX", "legislation")
+DAG_RUN_START = os.environ.get("DAG_RUN_START", None)
 
 
 def check_for_json_files(file_path: str) -> bool:
@@ -52,7 +53,6 @@ def download_files_from_gcs(file_path: str) -> None:
 def init_duckdb(
     jurisdiction: str,
     entities: list[str],
-    last_scrape_end_time: str = None,
 ) -> list[str]:
     """Initialize Duckdb and load data, return list of tables created for usage downstream."""
 
@@ -61,9 +61,9 @@ def init_duckdb(
         os.remove(db_path)
 
     sub_directory = "*"
-    if jurisdiction and last_scrape_end_time:
+    if jurisdiction and DAG_RUN_START:
         sub_directory = jurisdiction.replace("ocd-jurisdiction/", "")
-        sub_directory = f"{sub_directory}/{last_scrape_end_time}"
+        sub_directory = f"{sub_directory}/{DAG_RUN_START}"
     # Create DuckDB and load
     logger.info("Creating DuckDB schema and loading data...")
     con = duckdb.connect(db_path)

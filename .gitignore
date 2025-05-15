@@ -2,6 +2,6 @@ logs
 _data
 .cache
 merged_*
-db.db
+db.*
 __pycache__
 *json
