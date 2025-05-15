@@ -1,9 +1,11 @@
 import os
 import glob
 import logging
+import typing
 
 import duckdb
 from google.cloud import storage
+from slack_sdk.web import WebClient
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("openstates")
@@ -12,6 +14,26 @@ GCP_PROJECT = os.environ.get("GCP_PROJECT", None)
 BUCKET_NAME = os.environ.get("BUCKET_NAME", None)
 SCRAPE_LAKE_PREFIX = os.environ.get("BUCKET_PREFIX", "legislation")
 DAG_RUN_START = os.environ.get("DAG_RUN_START", None)
+SLACK_BEARER_TOKEN = os.environ.get("SLACK_BEARER_TOKEN", None)
+
+
+def send_slack_message(channel, msg=None, attachments=None) -> None:
+    if not SLACK_BEARER_TOKEN:
+        logger.warning("No SLACK_BEARER_TOKEN, cannot send slack notification.")
+    sendobj = {"channel": channel}
+    if msg:
+        sendobj["text"] = msg
+    if attachments:
+        if len(attachments) > 50:
+            attachments.insert(0, {"title": "Too many attachments", "color": "FF3333"})
+            attachments = attachments[:50]
+        sendobj["attachments"] = attachments
+    if sendobj.get("text", "") or sendobj.get("attachments", ""):
+        try:
+            client = WebClient(token=SLACK_BEARER_TOKEN)
+            client.chat_postMessage(**sendobj)
+        except Exception as e:
+            logger.error(f"Couldn't send slack message: {e}")
 
 
 def check_for_json_files(file_path: str) -> bool:

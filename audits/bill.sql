@@ -12,7 +12,7 @@ AUDIT (
   blocking false
 );
 SELECT * FROM scraper.bill
-WHERE title IS NULL;
+WHERE title IS NOT NULL;
 
 -- all bills have sponsors?
 AUDIT (

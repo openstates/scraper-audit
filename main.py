@@ -1,8 +1,10 @@
 import argparse
 
 from sqlmesh_tasks import sqlmesh_plan
+from utils import send_slack_message
 
-if __name__ == "__main__":
+
+def main() -> None:
     default_parser = argparse.ArgumentParser(add_help=False)
 
     parser = argparse.ArgumentParser(
@@ -31,4 +33,12 @@ if __name__ == "__main__":
         entities = [entity]
     else:
         entities = ["bill", "event", "vote_event"]
-    report = sqlmesh_plan(entities, jurisdiction)
+    reports = sqlmesh_plan(entities, jurisdiction)
+    if reports:
+        reports = "\n".join(reports)
+        msg = f"Scrape Output Audit for {jurisdiction}: \n{reports}"
+        send_slack_message("data-reports", msg)
+
+
+if __name__ == "__main__":
+    main()
