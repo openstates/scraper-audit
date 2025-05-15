@@ -4,6 +4,7 @@ import logging
 
 import duckdb
 from google.cloud import storage
+from slack_sdk.web import WebClient
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("openstates")
@@ -11,6 +12,28 @@ logger = logging.getLogger("openstates")
 GCP_PROJECT = os.environ.get("GCP_PROJECT", None)
 BUCKET_NAME = os.environ.get("BUCKET_NAME", None)
 SCRAPE_LAKE_PREFIX = os.environ.get("BUCKET_PREFIX", "legislation")
+DAG_RUN_START = os.environ.get("DAG_RUN_START", None)
+SLACK_BEARER_TOKEN = os.environ.get("SLACK_BEARER_TOKEN", None)
+
+
+def send_slack_message(channel, msg=None, attachments=None) -> None:
+    if not SLACK_BEARER_TOKEN:
+        logger.warning("No SLACK_BEARER_TOKEN, cannot send slack notification.")
+        return
+    sendobj = {"channel": channel}
+    if msg:
+        sendobj["text"] = msg
+    if attachments:
+        if len(attachments) > 50:
+            attachments.insert(0, {"title": "Too many attachments", "color": "FF3333"})
+            attachments = attachments[:50]
+        sendobj["attachments"] = attachments
+    if sendobj.get("text", "") or sendobj.get("attachments", ""):
+        try:
+            client = WebClient(token=SLACK_BEARER_TOKEN)
+            client.chat_postMessage(**sendobj)
+        except Exception as e:
+            logger.error(f"Couldn't send slack message: {e}")
 
 
 def check_for_json_files(file_path: str) -> bool:
@@ -50,9 +73,8 @@ def download_files_from_gcs(file_path: str) -> None:
 
 
 def init_duckdb(
-    jurisdiction: str,
     entities: list[str],
-    last_scrape_end_time: str = None,
+    jurisdiction: str = None,
 ) -> list[str]:
     """Initialize Duckdb and load data, return list of tables created for usage downstream."""
 
@@ -60,17 +82,21 @@ def init_duckdb(
     if os.path.exists(db_path):
         os.remove(db_path)
 
-    sub_directory = "*"
-    if jurisdiction and last_scrape_end_time:
-        sub_directory = jurisdiction.replace("ocd-jurisdiction/", "")
-        sub_directory = f"{sub_directory}/{last_scrape_end_time}"
+    # Determine subdirectory pattern for file search
+    if jurisdiction and DAG_RUN_START:
+        # Strip OCD prefix and build a dynamic path using DAG_RUN_START
+        relative_path = jurisdiction.replace("ocd-jurisdiction/", "")
+        sub_directory = f"**/{relative_path}/{DAG_RUN_START}"
+    else:
+        sub_directory = "**"
+
     # Create DuckDB and load
     logger.info("Creating DuckDB schema and loading data...")
     con = duckdb.connect(db_path)
     con.execute("CREATE SCHEMA IF NOT EXISTS scraper")
     table_created = []
 
-    file_path_prefix = f"./*/{sub_directory}"
+    file_path_prefix = f"./{sub_directory}"
     all_files_path = f"{file_path_prefix}/*.json"
 
     # Grab scrape output from data lake if none is provided
@@ -78,7 +104,9 @@ def init_duckdb(
         logger.info(
             "No file found in local directory, attempting to download from GCS, requires credentials in ENV."
         )
-        download_files_from_gcs(sub_directory)
+        # Remove "**/" from path prefix before passing to GCS downloader
+        gcs_path = sub_directory[3:] if sub_directory.startswith("**/") else sub_directory
+        download_files_from_gcs(gcs_path)
 
     # Load data into duckdb table
     for entity in entities:

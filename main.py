@@ -1,8 +1,11 @@
 import argparse
 
 from sqlmesh_tasks import sqlmesh_plan
+from openstates_metadata import lookup
+from utils import send_slack_message
 
-if __name__ == "__main__":
+
+def main() -> None:
     default_parser = argparse.ArgumentParser(add_help=False)
 
     parser = argparse.ArgumentParser(
@@ -25,10 +28,26 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     entity = args.entity
-    jurisdiction = args.jurisdiction
+    jur_obj = lookup(abbr=args.jurisdiction) if args.jurisdiction else None
 
     if entity:
         entities = [entity]
     else:
         entities = ["bill", "event", "vote_event"]
-    report = sqlmesh_plan(entities, jurisdiction)
+
+    # Use Jurisdiction if it is provided
+    if jur_obj:
+        reports = sqlmesh_plan(entities, jur_obj.jurisdiction_id)
+    else:
+        reports = sqlmesh_plan(entities)
+
+    # Send report
+    if reports:
+        reports = "\n".join(reports)
+        jur_name = jur_obj.name if jur_obj else ""
+        msg = f"Scrape Output Audit for {jur_name}: \n{reports}"
+        send_slack_message("data-reports", msg)
+
+
+if __name__ == "__main__":
+    main()
