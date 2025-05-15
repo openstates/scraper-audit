@@ -1,4 +1,4 @@
--- all events have sponsors?
+-- all events are classified?
 AUDIT (
     name assert_events_are_classified,
     blocking false
