@@ -44,11 +44,12 @@ def check_for_json_files(file_path: str) -> bool:
 def download_files_from_gcs(file_path: str) -> None:
     """Download from GCS to local directory"""
     try:
+        source_prefix = f"{SCRAPE_LAKE_PREFIX}/{file_path}"
+        logger.info(f"Attempting to download from {source_prefix}")
+
         cloud_storage_client = storage.Client(project=GCP_PROJECT)
         bucket = cloud_storage_client.bucket(BUCKET_NAME)
-        source_prefix = f"{SCRAPE_LAKE_PREFIX}/{file_path}"
 
-        logger.info(f"Attempting to download from {source_prefix}")
         blobs = bucket.list_blobs(prefix=source_prefix)
         datadir = f"_data/{file_path}"
         # Create local file directory
