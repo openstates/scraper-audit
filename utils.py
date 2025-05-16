@@ -90,7 +90,7 @@ def init_duckdb(
         relative_path = jurisdiction.replace("ocd-jurisdiction/", "")
         sub_directory = f"**/{relative_path}/{DAG_RUN_START}"
     else:
-        sub_directory = "**"
+        sub_directory = "*/**"
 
     # Create DuckDB and load
     logger.info("Creating DuckDB schema and loading data...")
@@ -107,7 +107,9 @@ def init_duckdb(
             "No file found in local directory, attempting to download from GCS, requires credentials in ENV."
         )
         # Remove "**/" from path prefix before passing to GCS downloader
-        gcs_path = sub_directory[3:] if sub_directory.startswith("**/") else sub_directory
+        gcs_path = (
+            sub_directory[3:] if sub_directory.startswith("**/") else sub_directory
+        )
         download_files_from_gcs(gcs_path)
 
     # Load data into duckdb table
