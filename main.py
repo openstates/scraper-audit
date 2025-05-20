@@ -46,7 +46,7 @@ def main() -> None:
         jur_name = jur_obj.name if jur_obj else ""
         msg = f"Scrape Output Audit for {jur_name}: \n{reports}"
         logger.info(msg)
-        # send_slack_message("data-reports", msg)
+        send_slack_message("data-reports", msg)
 
 
 if __name__ == "__main__":
