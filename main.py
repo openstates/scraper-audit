@@ -2,8 +2,7 @@ import argparse
 
 from sqlmesh_tasks import sqlmesh_plan
 from openstates_metadata import lookup
-from utils import send_slack_message
-
+from utils import send_slack_message, logger
 
 def main() -> None:
     default_parser = argparse.ArgumentParser(add_help=False)
@@ -46,7 +45,8 @@ def main() -> None:
         reports = "\n".join(reports)
         jur_name = jur_obj.name if jur_obj else ""
         msg = f"Scrape Output Audit for {jur_name}: \n{reports}"
-        send_slack_message("data-reports", msg)
+        logger.info(msg)
+        # send_slack_message("data-reports", msg)
 
 
 if __name__ == "__main__":
