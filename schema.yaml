@@ -29,7 +29,7 @@
     name: TEXT
     all_day: BOOLEAN
     start_date: TIMESTAMP
-    end_date: TEXT
+    end_date: TIMESTAMP
     status: TEXT
     classification: TEXT
     description: TEXT
@@ -61,4 +61,6 @@
     counts: STRUCT(option TEXT, value INTEGER)[]
     sources: STRUCT(url TEXT, note TEXT)[]
     extras: JSON
+    jurisdiction: STRUCT(id TEXT, name TEXT, classification TEXT, division_id TEXT)
+    scraped_at: TIMESTAMP
     _id: UUID

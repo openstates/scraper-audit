@@ -21,7 +21,10 @@ SELECT
     identifier::TEXT AS identifier,
     motion_text::TEXT AS motion_text,
     motion_classification::TEXT[] AS motion_classification,
-    NULLIF(start_date, NULL)::TIMESTAMP AS start_date,
+    CASE
+      WHEN CAST("start_date" AS VARCHAR) = '' THEN NULL
+      ELSE STRPTIME(CAST("start_date" AS VARCHAR), '%Y-%m-%d')
+    END AS start_date,
     result::TEXT AS result,
     organization::TEXT AS organization,
     legislative_session::TEXT AS legislative_session,
