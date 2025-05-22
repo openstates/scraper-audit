@@ -21,13 +21,7 @@ SELECT
     identifier::TEXT AS identifier,
     motion_text::TEXT AS motion_text,
     motion_classification::TEXT[] AS motion_classification,
-    CASE
-      WHEN start_date = '' THEN NULL
-      WHEN STRPOS(start_date::VARCHAR, 'T') = 0 THEN
-        STRPTIME(start_date::VARCHAR, '%Y-%m-%d')
-      ELSE
-        STRPTIME(start_date::VARCHAR, '%Y-%m-%dT%H:%M:%S%z')  -- CA, CO, FL, OR, PA, IA, WI, USA, NY, NV, NJ, NE, NC, ND, MO, IN
-    END AS start_date,
+    NULLIF(start_date, '')::TIMESTAMP AS start_date,
     result::TEXT AS result,
     organization::TEXT AS organization,
     legislative_session::TEXT AS legislative_session,
