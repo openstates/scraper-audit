@@ -22,9 +22,11 @@ SELECT
     motion_text::TEXT AS motion_text,
     motion_classification::TEXT[] AS motion_classification,
     CASE
-        WHEN start_date = '' THEN NULL
-        WHEN LENGTH(CAST(start_date AS VARCHAR)) = 10 THEN STRPTIME(start_date, '%Y-%m-%d')
-        ELSE STRPTIME(start_date, '%Y-%m-%dT%H:%M:%S%z')  -- CA, CO, FL, OR, PA, IA, WI, USA, NY, NV, NJ, NE, NC, ND, MO, IN,
+      WHEN start_date = '' THEN NULL
+      WHEN LENGTH(start_date::VARCHAR) = 10 THEN
+        STRPTIME(start_date::VARCHAR, '%Y-%m-%d')
+      ELSE
+        STRPTIME(start_date::VARCHAR, '%Y-%m-%dT%H:%M:%S%z')  -- CA, CO, FL, OR, PA, IA, WI, USA, NY, NV, NJ, NE, NC, ND, MO, IN
     END AS start_date,
     result::TEXT AS result,
     organization::TEXT AS organization,
