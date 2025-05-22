@@ -23,7 +23,7 @@ SELECT
     motion_classification::TEXT[] AS motion_classification,
     CASE
       WHEN start_date = '' THEN NULL
-      WHEN LENGTH(start_date::VARCHAR) = 10 THEN
+      WHEN STRPOS(start_date::VARCHAR, 'T') = 0 THEN
         STRPTIME(start_date::VARCHAR, '%Y-%m-%d')
       ELSE
         STRPTIME(start_date::VARCHAR, '%Y-%m-%dT%H:%M:%S%z')  -- CA, CO, FL, OR, PA, IA, WI, USA, NY, NV, NJ, NE, NC, ND, MO, IN
