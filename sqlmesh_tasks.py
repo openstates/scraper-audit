@@ -23,7 +23,8 @@ def extract_audit_error(stdout: str) -> typing.Union[str, None]:
 def sqlmesh_plan(entities: list[str], jurisdiction: str = None) -> list:
     """Run SQLMesh plan on initialized DuckDB data"""
 
-    initialize_entities = init_duckdb(entities, jurisdiction)
+    # initialize_entities = init_duckdb(entities, jurisdiction)
+    initialize_entities = ['bill']
     initialize_entities = [f"staged.{entity}" for entity in initialize_entities]
     reports = []
 
