@@ -15,7 +15,6 @@ MODEL (
         assert_bills_have_identifier,
         assert_bill_versions_have_note,
         assert_bill_versions_have_links,
-        assert_bill_versions_have_source_document,
     ),
 );
 
