@@ -32,7 +32,7 @@ def main() -> None:
     if entity:
         entities = [entity]
     else:
-        entities = ["bill", "event"]
+        entities = ["bill", "event", "vote_event"]
 
     # Use Jurisdiction if it is provided
     if jur_obj:

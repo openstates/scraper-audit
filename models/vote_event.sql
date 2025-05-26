@@ -21,7 +21,7 @@ SELECT
     identifier::TEXT AS identifier,
     motion_text::TEXT AS motion_text,
     motion_classification::TEXT[] AS motion_classification,
-    NULLIF(start_date, '')::TIMESTAMP AS start_date,
+    start_date::TEXT as start_date,
     result::TEXT AS result,
     organization::TEXT AS organization,
     legislative_session::TEXT AS legislative_session,
