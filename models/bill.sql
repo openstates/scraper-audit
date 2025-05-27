@@ -41,4 +41,4 @@ SELECT
     scraped_at::TIMESTAMP AS scraped_at,
     _id::TEXT AS _id
 FROM
-     read_json_auto('./_data/**/bill_*.json');
+     read_json_auto('./_data/**/bill_*.json', format='auto', union_by_name=true);
