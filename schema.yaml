@@ -1,4 +1,4 @@
-- name: '"db"."scraper"."bill"'
+- name: '"bill_import"."scraper"."bill"'
   columns:
     legislative_session: TEXT
     identifier: TEXT
@@ -24,7 +24,7 @@
     _id: UUID
     jurisdictions: STRUCT(id TEXT, name TEXT, classification TEXT, division_id TEXT)
     scraped_at: TIMESTAMP
-- name: '"db"."scraper"."event"'
+- name: '"bill_import"."scraper"."event"'
   columns:
     name: TEXT
     all_day: BOOLEAN
@@ -45,7 +45,7 @@
     jurisdiction: STRUCT(id TEXT, name TEXT, classification TEXT, division_id TEXT)
     scraped_at: TIMESTAMP
     _id: UUID
-- name: '"db"."scraper"."vote_event"'
+- name: '"bill_import"."scraper"."vote_event"'
   columns:
     identifier: TEXT
     motion_text: TEXT

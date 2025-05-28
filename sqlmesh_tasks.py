@@ -26,6 +26,7 @@ def sqlmesh_plan(entities: list[str], jurisdiction: str = None) -> list:
     # initialize_entities = init_duckdb(entities, jurisdiction)
     initialize_entities = ['bill']
     initialize_entities = [f"staged.{entity}" for entity in initialize_entities]
+    # initialize_entities.append("staged.bill")
     reports = []
 
     if not initialize_entities:

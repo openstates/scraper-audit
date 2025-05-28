@@ -1,10 +1,13 @@
 gateways:
-  duckdb:
+  motherduck:
     connection:
-      type: duckdb
-      database: db.db
+      type: motherduck
+      catalogs:
+        bill_import: "md:bill_import"
+        ephemeral: ":memory:"
+      token: {{ env_var('MOTHERDUCK_TOKEN') }}
 
-default_gateway: duckdb
+default_gateway: motherduck
 
 model_defaults:
   dialect: duckdb

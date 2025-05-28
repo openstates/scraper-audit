@@ -7,10 +7,11 @@ authors = ["Alex Obaseki <alex@pluralpolicy.com>"]
 [tool.poetry.dependencies]
 python = "^3.9"
 sqlmesh = "^0.176.0"
-duckdb = "^1.2.2"
+duckdb = "1.2.2"
 google-cloud-storage = "^3.1.0"
 slack-sdk = "^3.35.0"
 openstates-metadata = "^2024.10.3"
+numpy = "<2"
 
 [tool.poetry.group.dev.dependencies]
 black = "^22"
