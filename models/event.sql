@@ -15,8 +15,8 @@ MODEL (
 SELECT
     name::TEXT AS name,
     all_day::BOOLEAN AS all_day,
-    NULLIF(start_date, '')::TIMESTAMP AS start_date,
-    NULLIF(end_date, '')::TIMESTAMP AS end_date,
+    start_date::TEXT AS start_date,
+    end_date::TEXT AS end_date,
     status::TEXT AS status,
     classification::TEXT AS classification,
     description::TEXT AS description,
